@@ -66,8 +66,8 @@ class CorpusReader(object):
         for sentence in current:
             current_result.append(self.splited2token(sentence))
         for word in next:
-            next_result.append(self.token_dict.get(word))
-        return current_result,next_result
+            next_result.append([self.token_dict.get(word)])
+        return current_result, next_result
 
 
 if __name__ == '__main__':
