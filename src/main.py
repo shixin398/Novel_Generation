@@ -33,23 +33,23 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 
-def write(model, temperature, word_num, max_length, token_dict, all_words,begin_sentence):
-    gg = begin_sentence[:30]
-    print(''.join(gg), end='/// ')
+def write(model, temperature, word_num, max_length, token_dict, all_words, begin_sentence):
+    start = begin_sentence[:30]
+    print(''.join(start), end='|||')  # 打印起始句子
     for _ in range(word_num):
         sampled = np.zeros((1, max_length))
-        for t, char in enumerate(gg):
+        for t, char in enumerate(start):
             sampled[0, t] = token_dict[char]
 
         preds = model.predict(sampled, verbose=0)[0]
-        if temperature is None:
+        if temperature is None:  # 较为死板
             next_word = all_words[np.argmax(preds)]
-        else:
+        else:  # 随temperature越高越随机
             next_index = sample(preds, temperature)
             next_word = all_words[next_index]
 
-        gg.append(next_word)
-        gg = gg[1:]
+        start.append(next_word)
+        start = start[1:]
         sys.stdout.write(next_word)
         sys.stdout.flush()
 
@@ -67,4 +67,20 @@ if __name__ == '__main__':
 
     for _ in range(100):
         generator.fit(train_x, train_y, epochs=1, batch_size=32)
+
+    begin_sentence = all_words[50000:50100]
+    print('-----原始句子-----')
+    print('//'.join(begin_sentence))
+    print('-----原始句子-----')
+
+    print('-----生成死板句子-----')
+    write(generator, None, max_length, begin_sentence)
+    print('-----生成死板句子-----')
+
+    print('-----生成创意句子-----')
+    write(generator, 0.5, max_length, begin_sentence)
+    print('-----生成创意句子-----')
+
+
+
 
