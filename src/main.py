@@ -65,8 +65,7 @@ if __name__ == '__main__':
     biGRU = BidirectionalGRU(all_words, token_dict, max_length)
     generator = biGRU.model()
 
-    for _ in range(100):
-        generator.fit(train_x, train_y, epochs=1, batch_size=32)
+    generator.fit(train_x, train_y, epochs=100, batch_size=32)
 
     begin_sentence = all_words[50000:50100]
     print('-----原始句子-----')
